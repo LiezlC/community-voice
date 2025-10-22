@@ -87,10 +87,25 @@ function Dashboard() {
   const getCategoryLabel = (category: string) => {
     const categoryMap: { [key: string]: string } = {
       environmental: 'Environmental',
+      'Environmental': 'Environmental',
       land_dispute: 'Land Dispute',
+      'Land Dispute': 'Land Dispute',
+      resettlement: 'Resettlement',
+      'Resettlement': 'Resettlement',
       labor_issue: 'Labor Issue',
+      'Labor Issue': 'Labor Issue',
       health_safety: 'Health & Safety',
+      'Health & Safety': 'Health & Safety',
+      asset_damage_loss: 'Asset Damage/Loss',
+      'Asset Damage/Loss': 'Asset Damage/Loss',
+      access: 'Access',
+      'Access': 'Access',
+      traffic: 'Traffic',
+      'Traffic': 'Traffic',
+      noise: 'Noise',
+      'Noise': 'Noise',
       other: 'Other',
+      'Other': 'Other',
     };
     return categoryMap[category] || category;
   };
@@ -127,7 +142,7 @@ function Dashboard() {
           latitude: -25.7461,
           longitude: 28.1881,
           content: 'Water contamination near processing plant affecting our village water supply. Children getting sick.',
-          category: 'environmental',
+          category: 'Environmental',
           urgency: 'high',
           submitted_language: 'en',
           location_method: 'browser_auto',
@@ -140,7 +155,7 @@ function Dashboard() {
           latitude: null,
           longitude: null,
           content: 'Safety equipment shortage in underground section. No helmets for new workers.',
-          category: 'health_safety',
+          category: 'Health & Safety',
           urgency: 'medium',
           submitted_language: 'en',
           location_method: 'manual',
@@ -153,7 +168,7 @@ function Dashboard() {
           latitude: -25.7523,
           longitude: 28.1965,
           content: 'Land compensation not received as promised six months ago. Need urgent resolution.',
-          category: 'land_dispute',
+          category: 'Land Dispute',
           urgency: 'high',
           submitted_language: 'en',
           location_method: 'browser_auto',
@@ -166,7 +181,7 @@ function Dashboard() {
           latitude: null,
           longitude: null,
           content: 'Stof van ontploffings beïnvloed ons gewasgeskiedenis. Verlies van oeste.',
-          category: 'environmental',
+          category: 'Environmental',
           urgency: 'medium',
           submitted_language: 'af',
           location_method: 'manual',
@@ -179,7 +194,7 @@ function Dashboard() {
           latitude: -25.7445,
           longitude: 28.1912,
           content: 'Wage discrepancies for contract workers. Some workers paid less than agreed rates.',
-          category: 'labor_issue',
+          category: 'Labor Issue',
           urgency: 'medium',
           submitted_language: 'en',
           location_method: 'browser_auto',
@@ -192,7 +207,7 @@ function Dashboard() {
           latitude: -25.7489,
           longitude: 28.1834,
           content: 'Cracked walls in houses from blasting vibrations. Need structural assessment.',
-          category: 'environmental',
+          category: 'Asset Damage/Loss',
           urgency: 'medium',
           submitted_language: 'en',
           location_method: 'browser_auto',
@@ -205,7 +220,7 @@ function Dashboard() {
           latitude: null,
           longitude: null,
           content: 'Discrimination in promotion processes. Local workers overlooked for skilled positions.',
-          category: 'labor_issue',
+          category: 'Labor Issue',
           urgency: 'low',
           submitted_language: 'en',
           location_method: 'manual',
@@ -217,8 +232,8 @@ function Dashboard() {
           location_text: 'Village 4 Sacred Site',
           latitude: -25.7556,
           longitude: 28.2001,
-          content: 'Sacred site damaged by new road construction. Community elders very concerned.',
-          category: 'land_dispute',
+          content: 'Forced relocation without proper housing compensation. Families living in temporary shelters.',
+          category: 'Resettlement',
           urgency: 'high',
           submitted_language: 'en',
           location_method: 'browser_auto',
@@ -231,7 +246,7 @@ function Dashboard() {
           latitude: null,
           longitude: null,
           content: 'Onvoldoende toilet fasiliteite vir vroulike werkers. Sanitasie probleme.',
-          category: 'health_safety',
+          category: 'Health & Safety',
           urgency: 'medium',
           submitted_language: 'af',
           location_method: 'manual',
@@ -244,7 +259,7 @@ function Dashboard() {
           latitude: -25.7402,
           longitude: 28.1867,
           content: 'Noise pollution from 24-hour operations affecting sleep. Community health concern.',
-          category: 'environmental',
+          category: 'Noise',
           urgency: 'low',
           submitted_language: 'en',
           location_method: 'browser_auto',
@@ -257,7 +272,7 @@ function Dashboard() {
           latitude: null,
           longitude: null,
           content: 'Access road damaged, emergency vehicles cannot reach community. Urgent repair needed.',
-          category: 'other',
+          category: 'Access',
           urgency: 'high',
           submitted_language: 'en',
           location_method: 'manual',
@@ -269,8 +284,8 @@ function Dashboard() {
           location_text: 'Site 9 Training Center',
           latitude: null,
           longitude: null,
-          content: 'Training program promised but not delivered. Workers need skills development.',
-          category: 'labor_issue',
+          content: 'Heavy truck traffic destroying local roads and causing safety hazards for children.',
+          category: 'Traffic',
           urgency: 'low',
           submitted_language: 'en',
           location_method: 'manual',
@@ -300,12 +315,16 @@ function Dashboard() {
     }
   };
 
+  const normalizeCategoryForComparison = (category: string) => {
+    return category.toLowerCase().replace(/[^a-z]/g, '_').replace(/_+/g, '_');
+  };
+
   const filteredGrievances = grievances.filter((grievance) => {
     const matchesDateFrom = !filterDateFrom || new Date(grievance.created_at) >= new Date(filterDateFrom);
     const matchesDateTo = !filterDateTo || new Date(grievance.created_at) <= new Date(filterDateTo + 'T23:59:59');
     const matchesName = !filterName || (grievance.submitter_name || 'Anonymous').toLowerCase().includes(filterName.toLowerCase());
     const matchesLocation = !filterLocation || getLocationDisplay(grievance).toLowerCase().includes(filterLocation.toLowerCase());
-    const matchesCategory = !filterCategory || grievance.category === filterCategory;
+    const matchesCategory = !filterCategory || normalizeCategoryForComparison(grievance.category) === filterCategory || grievance.category === filterCategory;
     const matchesUrgency = !filterUrgency || grievance.urgency === filterUrgency;
     const matchesDescription = !filterDescription || grievance.content.toLowerCase().includes(filterDescription.toLowerCase());
 
@@ -320,17 +339,22 @@ function Dashboard() {
   const categories = [
     { name: 'Environmental', value: 'environmental' },
     { name: 'Land Dispute', value: 'land_dispute' },
+    { name: 'Resettlement', value: 'resettlement' },
     { name: 'Labor Issue', value: 'labor_issue' },
     { name: 'Health & Safety', value: 'health_safety' },
+    { name: 'Asset Damage/Loss', value: 'asset_damage_loss' },
+    { name: 'Access', value: 'access' },
+    { name: 'Traffic', value: 'traffic' },
+    { name: 'Noise', value: 'noise' },
     { name: 'Other', value: 'other' },
   ];
 
   const categoryCounts = categories.map((category) => ({
     name: category.name,
     value: category.value,
-    count: filteredGrievances.filter((g) => g.category === category.value).length,
+    count: filteredGrievances.filter((g) => normalizeCategoryForComparison(g.category) === category.value || g.category === category.value).length,
     percentage: totalGrievances > 0
-      ? (filteredGrievances.filter((g) => g.category === category.value).length / totalGrievances) * 100
+      ? (filteredGrievances.filter((g) => normalizeCategoryForComparison(g.category) === category.value || g.category === category.value).length / totalGrievances) * 100
       : 0,
   }));
 
@@ -528,8 +552,13 @@ function Dashboard() {
                     <option value="">All Categories</option>
                     <option value="environmental">Environmental</option>
                     <option value="land_dispute">Land Dispute</option>
+                    <option value="resettlement">Resettlement</option>
                     <option value="labor_issue">Labor Issue</option>
                     <option value="health_safety">Health & Safety</option>
+                    <option value="asset_damage_loss">Asset Damage/Loss</option>
+                    <option value="access">Access</option>
+                    <option value="traffic">Traffic</option>
+                    <option value="noise">Noise</option>
                     <option value="other">Other</option>
                   </select>
                 </div>

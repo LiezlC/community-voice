@@ -364,8 +364,13 @@ function App() {
                 <option value="">{t.selectCategory}</option>
                 <option value="Environmental">Environmental / Omgewing</option>
                 <option value="Land Dispute">Land Dispute / Grondgeskil</option>
+                <option value="Resettlement">Resettlement / Hervestiging</option>
                 <option value="Labor Issue">Labor Issue / Arbeidskwessie</option>
-                <option value="Health & Safety">Health & Safety / Gesondheid en Veiligheid</option>
+                <option value="Health & Safety">Health & Safety / Gesondheid & Veiligheid</option>
+                <option value="Asset Damage/Loss">Asset Damage/Loss / Bate Skade/Verlies</option>
+                <option value="Access">Access / Toegang</option>
+                <option value="Traffic">Traffic / Verkeer</option>
+                <option value="Noise">Noise / Geraas</option>
                 <option value="Other">Other / Ander</option>
               </select>
             </div>

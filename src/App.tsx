@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { MapPin, AlertCircle } from 'lucide-react';
-import { supabase } from './lib/supabase';
+import { ensureReporterSession, supabase } from './lib/supabase';
 import Dashboard from './Dashboard';
-
-console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL)
-console.log('Supabase key:', import.meta.env.VITE_SUPABASE_ANON_KEY?.slice(0,10) + '...')
+import OperatorAccess from './OperatorAccess';
 
 interface Submission {
   name: string;
@@ -133,6 +131,7 @@ function App() {
     setSubmitSuccess(null);
 
     try {
+      await ensureReporterSession();
       const urgency = detectUrgency(description);
 
       let locationMethod: string | null = null;
@@ -235,7 +234,7 @@ function App() {
       </header>
 
       {currentPage === 'dashboard' ? (
-        <Dashboard />
+        <OperatorAccess><Dashboard /></OperatorAccess>
       ) : (
         <div className="py-8 px-4">
           <div className="max-w-2xl mx-auto">
